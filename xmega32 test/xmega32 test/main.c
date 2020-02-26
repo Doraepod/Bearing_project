@@ -2,6 +2,12 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+#define i2c_write_size 1
+#define i2c_read_size 4
+
+uint8_t i2c_write_data [i2c_write_size] = {0x00};
+uint8_t i2c_read_data [i2c_read_size] = {0x00, 0x00, 0x00, 0x00};
+
 
 void i2c_master_init()
 {
@@ -10,20 +16,39 @@ void i2c_master_init()
 						| TWI_MASTER_RIEN_bm			//Enable i2c read
 						| TWI_MASTER_WIEN_bm			//Enable i2c write
 						| TWI_MASTER_ENABLE_bm;			//Enable i2c master
-	TWIC_MASTER_CTRLB = TWI_MASTER_TIMEOUT_DISABLED_gc	//Disable timeout
+	TWIC_MASTER_CTRLB = TWI_MASTER_TIMEOUT_DISABLED_gc;	//Disable timeout
 }
 
 //Send adress to all slaves with R/W bit
-void i2c_send_adress(adress, RW)
+void i2c_send_adress(uint8_t adress, uint8_t RW)
 {
-	TWIC_MASTER_ADDR = adress << 1 + RW;				
+	TWIC_MASTER_ADDR = (adress << 1) + RW;				
 }
 
-void i2c_write(adress, data)
+void i2c_write(uint8_t adress, uint8_t *write_data)
 {
-	i2c_send_adress(adress, 0)
+	i2c_send_adress(adress, 0);
 	while( !(TWIC_MASTER_STATUS & TWI_MASTER_WIF_bm) );
 	
+	uint8_t i = 0;
+	
+	for(i = 0; i < i2c_write_size; i++)
+	{
+		TWIC_MASTER_DATA = write_data [i];
+		while( !(TWIC_MASTER_STATUS & TWI_MASTER_WIF_bm) );
+	}
+}
+
+void i2c_read(uint8_t adress, uint8_t *read_data)
+{
+	i2c_send_adress(adress, 1);
+	uint8_t i = 0;
+	
+	for(i = 0; i < i2c_read_size; i++)
+	{
+		while( !(TWIC_MASTER_STATUS&TWI_MASTER_RIF_bm) );
+		read_data[i] = TWIC_MASTER_DATA;
+	}
 }
 
 void osc_init()
@@ -98,6 +123,7 @@ int main(void)
 	osc_init();
 	usart_init();
 	adc_init();
+	i2c_master_init();
     while (1) 
     {
 		value = adc_read(1);
@@ -105,5 +131,7 @@ int main(void)
 		_delay_ms(10);
 //		usart_send_string("hello world/r/n");
 		usart_send_int(value);
+		i2c_read(0x00, i2c_read_data);
+		i2c_write(0x00, i2c_write_data);
     }
 }
