@@ -3,6 +3,29 @@
 #include <util/delay.h>
 
 
+void i2c_master_init()
+{
+	TWIC_MASTER_BAUD = 155;								//Set i2c frequency. To calculate use equation BAUD = F_CPU / (2 * F_i2c) - 5
+	TWIC_MASTER_CTRLA = TWI_MASTER_INTLVL_HI_gc			//Set i2c high lvl interrupt
+						| TWI_MASTER_RIEN_bm			//Enable i2c read
+						| TWI_MASTER_WIEN_bm			//Enable i2c write
+						| TWI_MASTER_ENABLE_bm;			//Enable i2c master
+	TWIC_MASTER_CTRLB = TWI_MASTER_TIMEOUT_DISABLED_gc	//Disable timeout
+}
+
+//Send adress to all slaves with R/W bit
+void i2c_send_adress(adress, RW)
+{
+	TWIC_MASTER_ADDR = adress << 1 + RW;				
+}
+
+void i2c_write(adress, data)
+{
+	i2c_send_adress(adress, 0)
+	while( !(TWIC_MASTER_STATUS & TWI_MASTER_WIF_bm) );
+	
+}
+
 void osc_init()
 {
 	OSC_CTRL |= OSC_RC32MEN_bm;					//Enable internal 32MHz oscillator
