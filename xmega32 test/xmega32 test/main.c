@@ -2,17 +2,16 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define i2c_write_size 1
+#define i2c_write_size 2
 #define i2c_read_size 4
 
-uint8_t i2c_write_data [i2c_write_size] = {0x00};
-uint8_t i2c_read_data [i2c_read_size] = {0x00, 0x00, 0x00, 0x00};
+
 
 
 void i2c_master_init()
 {
 	TWIC_MASTER_BAUD = 155;								//Set i2c frequency. To calculate use equation BAUD = F_CPU / (2 * F_i2c) - 5
-	TWIC_MASTER_CTRLA = TWI_MASTER_INTLVL_HI_gc			//Set i2c high lvl interrupt
+	TWIC_MASTER_CTRLA = TWI_MASTER_INTLVL_HI_gc			//Set i2c high level interrupt
 						| TWI_MASTER_RIEN_bm			//Enable i2c read
 						| TWI_MASTER_WIEN_bm			//Enable i2c write
 						| TWI_MASTER_ENABLE_bm;			//Enable i2c master
@@ -115,6 +114,8 @@ uint16_t adc_read(uint8_t port)
 
 int main(void)
 {
+	uint8_t i2c_write_data [i2c_write_size] = {0x00, 0x00};
+	uint8_t i2c_read_data [i2c_read_size] = {0x00, 0x00, 0x00, 0x00};
 	PORTC_DIR = 1 << 3;
 	uint16_t value;
 	PORTA_DIR &= 0 << 1;	//Set PA1 as input (just in case) 
