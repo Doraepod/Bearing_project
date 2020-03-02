@@ -134,6 +134,45 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="go_ADC.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="go_ADC.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="go_INTERRUPT.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="go_INTERRUPT.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="go_RIGHT_FREQUENCY.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="go_RIGHT_FREQUENCY.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="go_TIMER.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="go_TIMER.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="GO_TWI.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="GO_TWI.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="go_UART.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="go_UART.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include_file.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
