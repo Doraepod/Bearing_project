@@ -14,5 +14,7 @@ uint16_t adc_read(uint8_t port)
 {
 	ADCA_CH0_MUXCTRL = port << 3;   //считываем значение с порта PA1
 	ADCA_CTRLA |= ADC_CH0START_bm;  //запуск преобразователя
+	while(~(ADCA_CH0_INTFLAGS &= ADC_CH_CHIF_bm));
+	ADCA_CH0_INTFLAGS = ADC_CH_CHIF_bm;
 	return ADCA_CH0RES;				//вывод значение АЦП
 }

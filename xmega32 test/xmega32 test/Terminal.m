@@ -1,5 +1,5 @@
 %warning('warning', 'MATLAB:serial:fread:unsuccessfulRead');
-port = serial('COM1', 'BaudRate', 9600, 'DataBits', 8, 'StopBits', 1, 'Parity', 'None', 'timeout', 4);
+port = serial('COM6', 'BaudRate', 9600, 'DataBits', 8, 'StopBits', 1, 'Parity', 'None', 'timeout', 4);
 fopen(port);
 disp('open');
 i = 0;
