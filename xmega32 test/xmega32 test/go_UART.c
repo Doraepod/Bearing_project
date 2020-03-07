@@ -2,6 +2,7 @@
 
 void usart_init()
 {
+	PORTC_DIR |= (1<<3); // USART подключен к порту PC3
 	USARTC0_CTRLC = USART_CHSIZE0_bm | USART_CHSIZE1_bm;	//Set 8-bit data size
 	
 	//for non-negative values of scale BAUDRATE = Fosc / (2 ^ SCALE * 16 * (BSEL + 1)) or BSEL = Fosc / (2 ^ SCALE * 16 * BAUDRATE) - 1
