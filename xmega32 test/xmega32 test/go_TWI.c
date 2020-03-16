@@ -17,56 +17,23 @@ void i2c_send_adress(uint8_t adress, uint8_t RW)
 	TWIE_MASTER_ADDR = (adress << 1) + RW;
 }
 
-void i2c_write(uint8_t adress, uint8_t write_data)
+void i2c_write(uint8_t adress, uint8_t *write_data, uint8_t size)
 {
+	uint8_t i = 0;
 	i2c_send_adress(adress, 0);
-	while( !(TWIE_MASTER_STATUS & TWI_MASTER_WIF_bm) );
-	TWIE_MASTER_DATA = write_data;
-	while( !(TWIE_MASTER_STATUS & TWI_MASTER_WIF_bm) );
+	_delay_us(500);
+	for(i = 0; i < size; i++)
+	{
+		TWIE_MASTER_DATA = write_data[i];
+		_delay_us(500);
+	}
+	TWIE_MASTER_CTRLC = TWI_MASTER_CMD_STOP_gc;
 }
 
 uint8_t i2c_read(uint8_t adress)
 {
 	i2c_send_adress(adress, 1);
-	while( !(TWIE_MASTER_STATUS&TWI_MASTER_RIF_bm) );
+	_delay_us(1000);
 	return TWIE_MASTER_DATA;
 }
 
-void lcd_init()
-{
-	TWIE_MASTER_ADDR = 0b01001110;
-	_delay_us(1000);
-	
-	TWIE_MASTER_DATA = 0b00000100;
-	_delay_us(1000);
-	TWIE_MASTER_DATA = 0b00000000;
-	_delay_us(1000);
-	TWIE_MASTER_DATA = 0b11000100;
-	_delay_us(1000);
-	TWIE_MASTER_DATA = 0b11000000;
-	_delay_us(1000);
-
-		TWIE_MASTER_DATA = 0b00110101;
-		_delay_us(1000);
-		TWIE_MASTER_DATA = 0b00110001;
-		_delay_us(1000);
-		TWIE_MASTER_DATA = 0b00110101;
-		_delay_us(1000);
-		TWIE_MASTER_DATA = 0b00111001;
-		_delay_us(1000);
-}
-
-void lcd_write()
-{
-	TWIE_MASTER_CTRLC = TWI_MASTER_CMD_REPSTART_gc;
-	i2c_send_adress(0b00111111, 0);
-	_delay_us(500);
-	TWIE_MASTER_DATA = 0b00110101;
-	_delay_us(500);
-	TWIE_MASTER_DATA = 0b00110001;
-	_delay_us(500);
-	TWIE_MASTER_DATA = 0b00110101;
-	_delay_us(500);
-	TWIE_MASTER_DATA = 0b00110001;
-	_delay_us(500);
-}
