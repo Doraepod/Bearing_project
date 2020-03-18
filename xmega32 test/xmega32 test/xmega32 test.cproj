@@ -146,6 +146,12 @@
     <Compile Include="go_INTERRUPT.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="go_LCD.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="go_LCD.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="go_RIGHT_FREQUENCY.c">
       <SubType>compile</SubType>
     </Compile>

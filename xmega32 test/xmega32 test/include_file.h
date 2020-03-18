@@ -9,10 +9,11 @@
 	#include <util/delay.h>
 	#include <avr/interrupt.h>
 
-	#include "go_UART.h" // UART 
-	#include "go_ADC.h"  //  АЦП 
+	#include "go_UART.h"			// UART 
+	#include "go_ADC.h"				//  АЦП 
  	#include "go_RIGHT_FREQUENCY.h" // настройка частоты 32 МГц
-	#include "go_TIMER.h" // таймер
-	#include "go_INTERRUPT.h" // прерывания 
-	#include "go_TWI.h" // TWI
+	#include "go_TIMER.h"			// таймер
+	#include "go_INTERRUPT.h"		// прерывания 
+	#include "go_TWI.h"				// TWI
+	#include "go_LCD.h"				//LCD
 #endif
