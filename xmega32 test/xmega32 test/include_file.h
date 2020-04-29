@@ -13,5 +13,6 @@
  	#include "go_RIGHT_FREQUENCY.h" // настройка частоты 32 ћ√ц
 	#include "go_TIMER.h" // таймер
 	#include "go_INTERRUPT.h" // прерывани€ 
-	#include "go_TWI.h" // TWI
+	//#include "go_TWI.h" // TWI
+	#include "i2c.h" //протестировать i2c
 #endif

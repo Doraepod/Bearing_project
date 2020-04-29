@@ -1,6 +1,6 @@
 #include "include_file.h"
 uint16_t value; //значение выхода АЦП
-
+	int R,W;
 void start(void)
 {
 	osc_init();	// настройка частоты 32МГц
@@ -8,7 +8,7 @@ void start(void)
 	adc_init(); //Включение АЦП
 	interrupt_init(); //включение прерывания
 	timer_init(); //включение таймера
-	i2c_master_init(); //Включение i2c
+	//i2c_master_init(); //Включение i2c
 }
 
 
@@ -28,13 +28,40 @@ int main(void)
 	PORTA_DIR &= 0 << 1;	//Set PA1 as input (just in case) для опорного напрядения АЦП
 	//lcd_init();
 	//lcd_write();
+		i2c_init();
+		i2c_start();
+		R = i2c_send_byte(0x4E);//
+		
+		R = i2c_send_byte(0b00101100); //очистить экран
+		R = i2c_send_byte(0b00101000); 
+		R = i2c_send_byte(0b10001100);
+		R = i2c_send_byte(0b10001000);
+		
+		R = i2c_send_byte(0b10001100);
+		R = i2c_send_byte(0b10001000);	//установка курсора в нужное положение
+		R = i2c_send_byte(0b00001100);
+		R = i2c_send_byte(0b00001000);
+
+		R = i2c_send_byte(0b00111101);//
+		R = i2c_send_byte(0b00111001);// вывести 3-йку
+		R = i2c_send_byte(0b00111101);//
+		R = i2c_send_byte(0b00111001);//
+			
 	while (1)
 	{
-		lcd_init();//
+		//lcd_init();//
 		//i2c_send_adress(0b1111111, 0);
-		PORTD_OUTTGL = 1;
+		//PORTD_OUTTGL = 1;
+		
+	//i2c_restart(void);
+
+	
+
+//	v = i2c_stop();
+	//i2c_read_byte(BYTE ask);	
+		
 		_delay_ms(500);
 		//usart_send_string("hello word"); //вывод на USART  hello word		
 		//usart_send_int(value); // вывод на USART значение с АЦП
-	}
+	}	
 }
