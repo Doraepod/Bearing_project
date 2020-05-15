@@ -1,6 +1,7 @@
 #ifndef DEFINE_CHECK
 	#define DEFINE_CHECK
 	#define F_CPU 32000000 // для настройки частоты
+	#define KOL 5
 
 	#include <avr/io.h>
 	#include <stdio.h>

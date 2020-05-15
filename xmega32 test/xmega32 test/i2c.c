@@ -3,7 +3,8 @@
 //=======================================================================
 #include "include_file.h"
 #include "i2c.h"
-
+uint16_t value1[10];
+int R;
 
 //=======================================================================
 //					       Функция генерирующая условия стоп
@@ -158,3 +159,39 @@ BYTE i2c_read_byte(BYTE ask)
 			
 		return byte;
 	}
+
+//=======================================================================
+//					       инициализация ADC
+//=======================================================================
+	
+void i2c_ADC(void)
+{
+	i2c_init();
+	i2c_start();
+	R = i2c_send_byte(0b10010000);//адрес ацп + команда на запись
+	R = i2c_send_byte(0b01000000);//команда для ацп
+	i2c_stop();
+	
+}
+
+void Data_in(void)
+{
+	i2c_init();
+	i2c_start();
+	R = i2c_send_byte(0b10010001);//адрес ацп + команда на чтение
+	for (int you = 0; you < KOL; you++)
+	{
+		value1[you] = i2c_read_byte(ACK);
+	}
+	value1[KOL-1] = i2c_read_byte(NACK);
+	i2c_stop();
+}
+
+void Data_out(void)
+{
+	for (int you = 0; you < KOL; you++)
+	{
+		usart_send_int(value1[you]);
+		_delay_ms(100);
+	}
+}

@@ -1,67 +1,39 @@
 #include "include_file.h"
-uint16_t value; //значение выхода АЦП
-	int R,W;
+//uint16_t value; //значение выхода АЦП
+ 
 void start(void)
 {
 	osc_init();	// настройка частоты 32МГц
-	//usart_init(); // включение USART
-	adc_init(); //Включение АЦП
+	usart_init(); // включение USART
+	//adc_init(); //Включение АЦП
 	interrupt_init(); //включение прерывания
-	timer_init(); //включение таймера
+	//timer_init(); //включение таймера
 	//i2c_master_init(); //Включение i2c
+	i2c_ADC();
 }
 
-
+/*
 ISR(TCC0_OVF_vect)
 {
 	value= adc_read(1); // считываем значение из АЦП
 }
+*/
 
 int main(void)
 {
-	
-	//PORTCFG.MPCMASK = 0x03; // Configure several PINxCTRL registers at the same time
-	//PORTE.PIN0CTRL = (PORTE.PIN0CTRL & ~PORT_OPC_gm) | PORT_OPC_PULLUP_gc; //Enable pull-up to get a defined level on the switches
+
 	PORTC_DIR = 0x00;
 	start(); //включение всего
 	PORTD_DIR = 1;
+	PORTD_OUTCLR = 1;
 	PORTA_DIR &= 0 << 1;	//Set PA1 as input (just in case) для опорного напрядения АЦП
-	//lcd_init();
-	//lcd_write();
-		i2c_init();
-		i2c_start();
-		R = i2c_send_byte(0x4E);//
-		
-		R = i2c_send_byte(0b00101100); //очистить экран
-		R = i2c_send_byte(0b00101000); 
-		R = i2c_send_byte(0b10001100);
-		R = i2c_send_byte(0b10001000);
-		
-		R = i2c_send_byte(0b10001100);
-		R = i2c_send_byte(0b10001000);	//установка курсора в нужное положение
-		R = i2c_send_byte(0b00001100);
-		R = i2c_send_byte(0b00001000);
-
-		R = i2c_send_byte(0b00111101);//
-		R = i2c_send_byte(0b00111001);// вывести 3-йку
-		R = i2c_send_byte(0b00111101);//
-		R = i2c_send_byte(0b00111001);//
-			
+	//PORTD_OUTTGL = 1;
 	while (1)
 	{
-		//lcd_init();//
-		//i2c_send_adress(0b1111111, 0);
-		//PORTD_OUTTGL = 1;
-		
-	//i2c_restart(void);
-
-	
-
-//	v = i2c_stop();
-	//i2c_read_byte(BYTE ask);	
-		
-		_delay_ms(500);
 		//usart_send_string("hello word"); //вывод на USART  hello word		
 		//usart_send_int(value); // вывод на USART значение с АЦП
+		Data_in();
+		_delay_ms(100);
+		Data_out();
 	}	
 }
