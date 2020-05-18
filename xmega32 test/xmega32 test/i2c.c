@@ -3,8 +3,11 @@
 //=======================================================================
 #include "include_file.h"
 #include "i2c.h"
-uint16_t value1[10];
+uint16_t value1[KOL];
 int R;
+float otvet;
+float temp;
+int lastotvet;
 
 //=======================================================================
 //					       Функция генерирующая условия стоп
@@ -169,11 +172,11 @@ void i2c_ADC(void)
 	i2c_init();
 	i2c_start();
 	R = i2c_send_byte(0b10010000);//адрес ацп + команда на запись
-	R = i2c_send_byte(0b01000000);//команда для ацп
+	R = i2c_send_byte(0b01000100);//команда для ацп
 	i2c_stop();
 	
 }
-
+/*
 void Data_in(void)
 {
 	i2c_init();
@@ -192,6 +195,31 @@ void Data_out(void)
 	for (int you = 0; you < KOL; you++)
 	{
 		usart_send_int(value1[you]);
+		_delay_ms(100);
+	}
+}
+*/
+
+void Data_in(void)
+{
+	for (int you = 0; you < KOL; you++)
+	{
+		i2c_init();
+		i2c_start();
+		R = i2c_send_byte(0b10010001);//адрес ацп + команда на чтение
+		value1[you] = i2c_read_byte(NACK);
+		i2c_stop();
+	}
+}
+
+void Data_out(void)
+{
+	for (int you = 0; you < KOL; you++)
+	{
+		temp = (((float)value1[you]) / 255 ) * 10; // значение напряжения 
+		otvet = ( (temp - 0.11783) / 2.365 ) + 0.45;
+		lastotvet = otvet * 1000;
+		usart_send_int(lastotvet);
 		_delay_ms(100);
 	}
 }

@@ -33,7 +33,7 @@ int main(void)
 		//usart_send_string("hello word"); //вывод на USART  hello word		
 		//usart_send_int(value); // вывод на USART значение с АЦП
 		Data_in();
-		_delay_ms(100);
+		_delay_ms(5000);
 		Data_out();
 	}	
 }
