@@ -4,6 +4,7 @@
 #include "include_file.h"
 #include "i2c.h"
 uint16_t value1[KOL];
+uint16_t value;
 int R;
 float otvet;
 float temp;
@@ -176,20 +177,21 @@ void i2c_ADC(void)
 	i2c_stop();
 	
 }
-/*
+
 void Data_in(void)
 {
 	i2c_init();
 	i2c_start();
 	R = i2c_send_byte(0b10010001);//адрес ацп + команда на чтение
-	for (int you = 0; you < KOL; you++)
+	value = i2c_read_byte(ACK);
+	for (int you = 0; you < KOL-1; you++)
 	{
 		value1[you] = i2c_read_byte(ACK);
 	}
 	value1[KOL-1] = i2c_read_byte(NACK);
 	i2c_stop();
 }
-
+/*
 void Data_out(void)
 {
 	for (int you = 0; you < KOL; you++)
@@ -199,7 +201,7 @@ void Data_out(void)
 	}
 }
 */
-
+/*
 void Data_in(void)
 {
 	for (int you = 0; you < KOL; you++)
@@ -211,7 +213,7 @@ void Data_in(void)
 		i2c_stop();
 	}
 }
-
+*/
 void Data_out(void)
 {
 	for (int you = 0; you < KOL; you++)
