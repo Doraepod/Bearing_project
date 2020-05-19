@@ -9,6 +9,9 @@ int R;
 float otvet;
 float temp;
 int lastotvet;
+int otvetxy[4];
+int y;
+
 
 //=======================================================================
 //					       Функция генерирующая условия стоп
@@ -178,12 +181,21 @@ void i2c_ADC(void)
 	
 }
 
+void i2c_war(void)
+{
+		i2c_init();
+		i2c_start();
+		R = i2c_send_byte(0b10010001);//адрес ацп + команда на чтение
+		value = i2c_read_byte(NACK);
+		i2c_stop();
+}
+
+
 void Data_in(void)
 {
 	i2c_init();
 	i2c_start();
 	R = i2c_send_byte(0b10010001);//адрес ацп + команда на чтение
-	value = i2c_read_byte(ACK);
 	for (int you = 0; you < KOL-1; you++)
 	{
 		value1[you] = i2c_read_byte(ACK);
@@ -191,7 +203,7 @@ void Data_in(void)
 	value1[KOL-1] = i2c_read_byte(NACK);
 	i2c_stop();
 }
-/*
+/*обычный вывод по USART массива значегий -----
 void Data_out(void)
 {
 	for (int you = 0; you < KOL; you++)
@@ -201,7 +213,7 @@ void Data_out(void)
 	}
 }
 */
-/*
+/* кривой вариант принять значения с АЦП -----
 void Data_in(void)
 {
 	for (int you = 0; you < KOL; you++)
@@ -212,8 +224,8 @@ void Data_in(void)
 		value1[you] = i2c_read_byte(NACK);
 		i2c_stop();
 	}
-}
-*/
+}*/
+/* нормальный вариант вывода по USART всех посчитанных значений расстояиня +++
 void Data_out(void)
 {
 	for (int you = 0; you < KOL; you++)
@@ -224,4 +236,25 @@ void Data_out(void)
 		usart_send_int(lastotvet);
 		_delay_ms(100);
 	}
+}*/
+
+void Data_out(void)
+{
+	for (int you = 0; you < KOL; you++)
+	{
+		temp = (((float)value1[you]) / 255 ) * 10; // значение напряжения
+		otvet = ( (temp - 0.11783) / 2.365 ) + 0.45;
+		lastotvet = otvet * 1000;
+		otvetxy[you] = lastotvet;
+	}
+
+		y=(otvetxy[0]-otvetxy[1])/2;
+		y= 2000 + y;
+		usart_send_int(y);
+		_delay_ms(100);
+		y=(otvetxy[2]-otvetxy[3])/2;
+		y=  2000 + y;
+		usart_send_int(y);
+		_delay_ms(100);
+	
 }

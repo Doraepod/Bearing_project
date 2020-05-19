@@ -37,5 +37,6 @@ BYTE i2c_read_byte(BYTE ask);	// Функция читает байт. Если аргумент передается A
 void i2c_ADC(void);
 void Data_in(void);
 void Data_out(void);
+void i2c_war(void);
 
 #endif /* I2C_H_ */

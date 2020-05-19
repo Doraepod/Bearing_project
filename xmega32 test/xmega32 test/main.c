@@ -28,6 +28,7 @@ int main(void)
 	PORTD_OUTCLR = 1;
 	PORTA_DIR &= 0 << 1;	//Set PA1 as input (just in case) для опорного напрядения АЦП
 	//PORTD_OUTTGL = 1;
+	i2c_war();
 	while (1)
 	{
 		//usart_send_string("hello word"); //вывод на USART  hello word		
