@@ -3,15 +3,16 @@
 //=======================================================================
 #include "include_file.h"
 #include "i2c.h"
-uint16_t value1[KOL];
-uint16_t value;
-int R;
-float otvet;
-float temp;
-int lastotvet;
-int otvetxy[4];
-int y;
-
+ uint16_t value1[DD];
+ uint16_t value;
+ int R;
+ float otvet;
+ float temp;
+ int lastotvet;
+ int otvetxy[DD];
+ int y;
+ int non=0;
+ 
 
 //=======================================================================
 //					       ‘ункци€ генерирующа€ услови€ стоп
@@ -189,8 +190,23 @@ void i2c_war(void)
 		value = i2c_read_byte(NACK);
 		i2c_stop();
 }
+void Data_in(void)
+{
+	i2c_init();
+	i2c_start();
+	R = i2c_send_byte(0b10010001);//адрес ацп + команда на чтение
+	int you;
+	for (you = 0; you < KOL-1; you++)
+	{
+		value1[non] = i2c_read_byte(ACK);
+		non++;
+	}
+	value1[non] = i2c_read_byte(NACK);
+	non++;
+	i2c_stop();
+}
 
-
+/*
 void Data_in(void)
 {
 	i2c_init();
@@ -202,29 +218,16 @@ void Data_in(void)
 	}
 	value1[KOL-1] = i2c_read_byte(NACK);
 	i2c_stop();
-}
+}*/
 /*обычный вывод по USART массива значегий -----
 void Data_out(void)
 {
 	for (int you = 0; you < KOL; you++)
 	{
 		usart_send_int(value1[you]);
-		_delay_ms(100);
-	}
-}
-*/
-/* кривой вариант прин€ть значени€ с ј÷ѕ -----
-void Data_in(void)
-{
-	for (int you = 0; you < KOL; you++)
-	{
-		i2c_init();
-		i2c_start();
-		R = i2c_send_byte(0b10010001);//адрес ацп + команда на чтение
-		value1[you] = i2c_read_byte(NACK);
-		i2c_stop();
 	}
 }*/
+
 /* нормальный вариант вывода по USART всех посчитанных значений рассто€ин€ +++
 void Data_out(void)
 {
@@ -237,7 +240,30 @@ void Data_out(void)
 		_delay_ms(100);
 	}
 }*/
+/* последн€€ верси€
+void Data_out(void)
+{
+	for (int you = 0; you < KOL; you++)
+	{
+		temp = (((float)value1[you]) / 255 ) * 10; // значение напр€жени€
+		otvet = ( (temp - 0.11783) / 2.365 ) + 0.45;
+		lastotvet = otvet * 1000;
+		usart_send_int(lastotvet);
+		otvetxy[you] = lastotvet;
+		_delay_ms(50);
+	}
 
+		y=(otvetxy[0]-otvetxy[1])/2;
+		y= 2000 + y;
+		usart_send_int(y);
+		_delay_ms(50);
+		y=(otvetxy[2]-otvetxy[3])/2;
+		y=  2000 + y;
+		usart_send_int(y);
+		_delay_ms(50);
+	
+}*/
+/*
 void Data_out(void)
 {
 	for (int you = 0; you < KOL; you++)
@@ -247,14 +273,49 @@ void Data_out(void)
 		lastotvet = otvet * 1000;
 		otvetxy[you] = lastotvet;
 	}
-
-		y=(otvetxy[0]-otvetxy[1])/2;
+	
+	for (int you = 0; you < KOL; you++)
+	{
+		usart_send_int(otvetxy[you]);
+		_delay_ms(10);
+	}
+	usart_send_string("hello word");
+	
+	for (int you = 0; you < KOL; you+=4)
+	{
+		y=(otvetxy[you]-otvetxy[you+1])/2;
 		y= 2000 + y;
 		usart_send_int(y);
-		_delay_ms(100);
-		y=(otvetxy[2]-otvetxy[3])/2;
+		_delay_ms(10);
+		y=(otvetxy[you+2]-otvetxy[you+3])/2;
 		y=  2000 + y;
 		usart_send_int(y);
-		_delay_ms(100);
-	
+		_delay_ms(10);
+	}
+	usart_send_string("hello word");	
+}*/
+void Data_out(void)
+{
+	int you;
+	for (you = 0; you < DD; you++)
+	{
+		temp = (((float)value1[you]) / 255 ) * 10; // значение напр€жени€
+		otvet = ( (temp - 0.11783) / 2.365 ) + 0.45;
+		lastotvet = otvet * 1000;
+		otvetxy[you] = lastotvet;
+	}
+	for (you = 0; you < DD; you++)
+	{
+		int pop = otvetxy[you];
+		usart_send_int(pop);
+	}
+	for (you = 0; you < DD; you+=4)
+	{
+		y=(otvetxy[you]-otvetxy[you+1])/2;
+		y= 2000 + y;
+		usart_send_int(y);
+		y=(otvetxy[you+2]-otvetxy[you+3])/2;
+		y=  2000 + y;
+		usart_send_int(y);
+	}
 }

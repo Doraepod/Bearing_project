@@ -18,7 +18,7 @@
 #define ACK 0		// Ответ удачный
 #define NACK 1		// Ответ не удачный
 
-#define I2C_DELAY()	_delay_ms(1);	// Общая пауза на шине
+#define I2C_DELAY()	_delay_us(10);	// Общая пауза на шине
 
 #define ONE_SCL()	{ I2C_DDR &= ~(1 << I2C_SCL); I2C_PORT |= (1 << I2C_SCL); } // Установка единицы на линии SCL
 #define NULL_SCL()	{ I2C_DDR |= (1 << I2C_SCL);  I2C_PORT &= ~(1 << I2C_SCL); } // Установка нуля на линии SCL

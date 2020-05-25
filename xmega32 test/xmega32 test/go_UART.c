@@ -7,9 +7,9 @@ void usart_init()
 	
 	//for non-negative values of scale BAUDRATE = Fosc / (2 ^ SCALE * 16 * (BSEL + 1)) or BSEL = Fosc / (2 ^ SCALE * 16 * BAUDRATE) - 1
 	//for negative values of scale BAUDRATE = Fosc / 16 * (2 ^ SCALE * BSEL + 1) or BSEL = (Fosc / (16 * BAUDRATE) - 1) / 2 ^ SCALE
-	USARTC0_BAUDCTRLA = 217;			//Lower 8 bits of rate set register (for 9600 rate BSEL should be 217 @32MHz)
-	USARTC0_BAUDCTRLB = 0;				//Scale from -7 to 7 (0b1001 for -7)
-	
+	USARTC0_BAUDCTRLA = 109;			//Lower 8 bits of rate set register (for 9600 rate BSEL should be 217 @32MHz)
+	USARTC0_BAUDCTRLB = 0b11000000;				//Scale from -7 to 7 (0b1001 for -7)
+
 	
 	USARTC0_CTRLB |= USART_TXEN_bm;		//Enable usart transmit
 }
