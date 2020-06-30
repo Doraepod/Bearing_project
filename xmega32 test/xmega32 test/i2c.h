@@ -34,9 +34,5 @@ void i2c_restart(void);			// Функция рестарта
 void i2c_init(void);			// Фуекция инициализации шины
 BYTE i2c_send_byte(BYTE data);	// Функция передачи байта. Возвращает ACK данные переданы, NACK данные не переданы
 BYTE i2c_read_byte(BYTE ask);	// Функция читает байт. Если аргумент передается ACK, значит будет читатся еще один байт. Если аргумент NACK, значит принят последний байт
-void i2c_ADC(void);
-void Data_in(void);
-void Data_out(void);
-void i2c_war(void);
 
 #endif /* I2C_H_ */

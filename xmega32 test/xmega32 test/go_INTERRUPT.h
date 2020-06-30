@@ -1,2 +1,2 @@
-void interrupt_init();
-void interrupt_close();
+void interrupt_init(); // инициализация и разрешение прерывай всех уровней
+void interrupt_close(); // запрет прерываний всех уровней 
